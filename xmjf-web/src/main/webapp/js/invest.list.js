@@ -73,9 +73,15 @@ function  loadInvestListData(isHistory,itemType,itemCycle,pageNum,pageSize) {
             var list=data.list;
             if(list.length>0){
                 initTrHtml(list);
+                initItemScale();// 初始化圆形进度框
+                initDjs();
                 initPageHtml(paginator);
             }else{
-                alert("暂无数据!");
+                //alert("暂无数据!");
+                $("#pages").html("<img style='margin-left: -70px;padding:40px;' " +
+                    "src='/img/zanwushuju.png'>");
+                $("#pcItemList").html("");
+
             }
         }
     })
@@ -91,12 +97,12 @@ function  initTrHtml(list) {
         for(var i=0;i<list.length;i++){
             var tempData=list[i];
             trs=trs+"<tr>";
-            trs=trs+"<td><strong>"+tempData.itemRate+"</strong><span>%";
+            trs=trs+"<td><strong>"+tempData.itemRate+"</strong><span>%";//项目利率
             if(!isEmpty(tempData.itemAddRate)){
                 trs=trs+"+"+tempData.itemAddRate+"%"
             }
             trs=trs+"</span></td>";
-            trs=trs+"<td>"+tempData.itemCycle+"|";
+            trs=trs+"<td>"+tempData.itemCycle+"|"; //项目期限
             if(tempData.itemCycleUnit==0||tempData.itemCycleUnit==1){
                 trs=trs+"天";
             }
@@ -114,17 +120,17 @@ function  initTrHtml(list) {
 
             trs=trs+"<td>";
             trs=trs+tempData.itemName;
-            if(tempData.itemIsnew==1){
+            if(tempData.itemIsnew==1){  //项目的新手标的标志，0-普通，1-新手标',
                 trs=trs+"<strong class='colorful' new>NEW</strong>";
             }
             if(tempData.itemIsnew==0){
-                if(tempData.moveVip==1){
+                if(tempData.moveVip==1){  //'是否移动专享0-否1-是',
                     trs=trs+"<strong class='colorful' app>APP</strong>";
                 }
             }
             if(tempData.itemIsnew==0){
                 if(tempData.moveVip==0){
-                    if(tempData.itemIsrecommend==1){
+                    if(tempData.itemIsrecommend==1){ //'是否推荐：0-否 1-推荐表2-周年庆3-奥运',
                         trs=trs+"<strong class='colorful' hot>HOT</strong>";
                     }
                 }
@@ -160,29 +166,50 @@ function  initTrHtml(list) {
             trs=trs+"<img src='../img/logo.png' >";
             trs=trs+"</td>";
 
-            // 暂时显示进度值  后期优化
-            trs=trs+"<td>+"+tempData.itemScale+"</td>";
+
+            if(tempData.itemStatus==1){
+                /**
+                 *  <strong class='countdown time' data-time="{{countdown}}">
+                 <time class="hour"></time>&nbsp;:
+                 <time class="min"></time>&nbsp;:
+                 <time class="sec"></time>
+                 </strong>
+                 */
+                trs=trs+"<td>";
+                trs=trs+"<strong class='countdown time' data-item='"+tempData.id+"' data-time='"+tempData.syTime+"'>";
+                trs=trs+" <time class='hour'></time>&nbsp;:";
+                trs=trs+"<time class='min'></time>&nbsp;:";
+                trs=trs+" <time class='sec'></time>";
+                trs=trs+"</td>";
+
+            }else{
+                // 暂时显示进度值  后期优化
+                trs=trs+"<td class='itemScale' data-val='"+tempData.itemScale+"'></td>";
+            }
+
+
 
             trs=trs+"<td>";
             var status=tempData.itemStatus;
+            var href=ctx+"/basItem/itemDetailPage?itemId="+tempData.id;
             if(status==1){
-                trs=trs+"<p><a href='' ><input class=‘countdownButton’ valid type=‘button’ value='即将开标'></a></p>";
+                trs=trs+"<p><a href='"+href+"' ><input class=‘countdownButton’ valid type=‘button’ value='即将开标'></a></p>";
             }
             if(status==10||status==13||status==18){
                 trs=trs+"<p class='left_money'>可投金额"+tempData.itemOngoingAccount+"元</p>" +
-                    "<p><a href=''><input valid type='button' value='立即投资'></a></p>";
+                    "<p><a href='"+href+"'><input valid type='button' value='立即投资'></a></p>";
             }
             if(status==20){
-                trs=trs+ "<p><a href=''><input not_valid type='button' value='已抢完'></a></p>";
+                trs=trs+ "<p><a href='"+href+"'><input not_valid type='button' value='已抢完'></a></p>";
             }
             if(status==30||status==31){
-                trs=trs+ "<p><a href=''><input not_valid type='button' value='还款中'></a></p>";
+                trs=trs+ "<p><a href="+href+"''><input not_valid type='button' value='还款中'></a></p>";
             }
             if(status==32){
-                trs=trs+ "<p style=‘position: relative’><a href='' class=‘yihuankuan’><input not_valid type='button' value='已还款'></a></p>";
+                trs=trs+ "<p style=‘position: relative’><a href='"+href+"' class=‘yihuankuan’><input not_valid type='button' value='已还款'></a></p>";
             }
             if(status==23){
-                trs=trs+ "<p><a href=''><input not_valid type='button' value='已满标'></a></p>";
+                trs=trs+ "<p><a href='"+href+"'><input not_valid type='button' value='已满标'></a></p>";
             }
             trs=trs+"</td>";
             trs=trs+"</tr>";
@@ -237,4 +264,107 @@ function toPageData(page) {
         isHistory=1;
     }
     loadInvestListData(isHistory,itemType,index,pageNum);
+}
+
+
+function  initItemScale() {
+    $('.itemScale').radialIndicator();
+    var arrs=$('.itemScale');
+    if(arrs.length>0){
+        arrs.each(function(){
+            var val=$(this).attr("data-val");
+            var radialObj=$(this).data('radialIndicator');
+            radialObj.option("barColor","orange");
+            radialObj.option("percentage",true);
+            radialObj.option("barWidth",10);
+            radialObj.option("radius",40);
+            radialObj.value(val);
+        })
+    }
+}
+
+function initDjs() {
+    $(".countdown").each(function () {
+        var syTime= $(this).attr("data-time");// 当前记录剩余发布时间
+        var itemId=$(this).attr("data-item");// 当前记录id
+        timer(syTime,$(this),itemId);
+    })
+}
+
+/**
+ * 渲染贷款项目投资进度
+ */
+function initInvestScale() {
+    radialIndicator.defaults.radius=40;
+    radialIndicator.defaults.barColor="orange";
+    radialIndicator.defaults.barWidth=10;
+    radialIndicator.defaults.roundCorner=true;
+    radialIndicator.defaults.percentage=true;
+    radialIndicator.defaults.fontSize=25;
+    $(".itemScale").each(function () {
+        var investScale= $(this).attr("data-value");//获取投资进度
+        $(this).radialIndicator();
+        $(this).data('radialIndicator').value(investScale);
+    })
+}
+
+/**
+ * 即将开标项目倒计时
+ */
+function initInvestDjs() {
+    $(".countdown").each(function () {
+        var syTime= $(this).attr("data-time");
+        var itemId=$(this).attr("data-item");
+        timer(syTime,$(this),itemId);
+    })
+}
+
+/**
+ * 倒计时
+ * @param intDiff
+ * @param obj
+ * @param itemId
+ */
+function timer(intDiff,obj,itemId){
+    if( obj.timers){
+        clearInterval( obj.timers);
+    }
+
+    obj.timers=setInterval(function(){
+        var day=0,
+            hour=0,
+            minute=0,
+            second=0;//时间默认值
+        if(intDiff > 0){
+            day = Math.floor(intDiff / (60 * 60 * 24));
+            hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+            minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+            second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        }
+
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+        obj.find('.hour').html(hour);
+        obj.find('.min').html(minute);
+        obj.find('.sec').html(second);
+        intDiff--;
+        if(intDiff==-1){
+            $.ajax({
+                url : ctx+'/basItem/updateBasItemStatusToOpen',
+                dataType : 'json',
+                type : 'post',
+                data:{
+                    itemId:itemId
+                },
+                success : function(data) {
+                    if(data.code==200){
+                        window.location.reload()
+                    }
+                },
+                error : function(textStatus, errorThrown) {
+
+                }
+            });
+        }
+    }, 1000);
 }

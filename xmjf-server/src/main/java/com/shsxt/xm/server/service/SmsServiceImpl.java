@@ -32,7 +32,7 @@ public class SmsServiceImpl implements ISmsService {
          * 正则判断手机号码是否合法
          */
         AssertUtil.isTrue(!Pattern.matches(TaoBaoConstant.REGEX_MOBILE,phone),"手机号不合法");
-        AssertUtil.isTrue(StringUtils.isBlank(code), "手机号验证码不能为空");
+        AssertUtil.isTrue(StringUtils.isBlank(code), "手机验证码不能为空");
         AssertUtil.isTrue(null == type, "类型不匹配");
         AssertUtil.isTrue(!type.equals(SmsType.REGISTER.getType()) && !type.equals(SmsType.NOTIFY.getType()),
                 "类型不匹配");
@@ -42,14 +42,14 @@ public class SmsServiceImpl implements ISmsService {
              */
             BasUser basUser = basUserService.queryBasUserByPhone(phone);
             AssertUtil.isTrue(basUser != null, "该手机号已经被注册");
-            doSend(phone, code);
+            doSend(phone, code,TaoBaoConstant.SMS_TEMATE_CODE_REGISTER);
         }
         if (type.equals(SmsType.NOTIFY.getType())) {
-            doSend(phone, code);
+            doSend(phone, code,TaoBaoConstant.SMS_TEMATE_CODE_lOGIN);
         }
     }
 
-    public void doSend(String phone, String code) {
+    public void doSend(String phone, String code,String template) {
         TaobaoClient client = new DefaultTaobaoClient(TaoBaoConstant.SERVER_URL,
                 TaoBaoConstant.APP_KEY,TaoBaoConstant.APP_SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
@@ -60,7 +60,7 @@ public class SmsServiceImpl implements ISmsService {
         map.put("code",code);
         req.setSmsParamString(JSON.toJSONString(map));
         req.setRecNum(phone);
-        req.setSmsTemplateCode(TaoBaoConstant.SMS_TEMATE_CODE);
+        req.setSmsTemplateCode(template);
         AlibabaAliqinFcSmsNumSendResponse rsp = null;
         try {
             rsp = client.execute(req);

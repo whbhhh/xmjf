@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.shsxt.xm.server.db.dao.BasItemDao" >
-  <resultMap id="BaseResultMap" type="com.shsxt.xm.api.po.BasItem" >
+  <resultMap id="BaseResultMap" type="com.shsxt.xm.api.dto.BasItemDto" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="item_isalive" property="itemIsalive" jdbcType="TINYINT" />
     <result column="item_isnew" property="itemIsnew" jdbcType="TINYINT" />
@@ -447,8 +447,11 @@
            and bi.item_status in (18, 20, 23, 30, 31, 32)
         </if>
       </where>
-
-
   </select>
+  <update id="updateBasItemStatusToOpen">
+    update bas_item
+    set item_status=10
+    where id=#{itemId} and  item_isalive = 1
+  </update>
 
 </mapper>

@@ -45,7 +45,8 @@ public class SmsController {
         }
         try {
             String code = RandomCodesUtils.createRandom(true,4);
-            smsService.sendPhoneSms(phone,code,type);
+            System.out.println("code"+code);
+           //smsService.sendPhoneSms(phone,code,type);
             //手机验证码 存入session
             session.setAttribute(P2pConstant.PHONE_VERIFY_CODE+phone,code);
             //发送手机验证码时间存入session

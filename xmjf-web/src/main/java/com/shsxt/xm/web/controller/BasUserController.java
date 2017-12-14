@@ -4,6 +4,7 @@ import com.shsxt.xm.api.constant.P2pConstant;
 import com.shsxt.xm.api.exception.ParamsException;
 import com.shsxt.xm.api.model.ResultInfo;
 import com.shsxt.xm.api.po.BasUser;
+import com.shsxt.xm.api.service.IBasUserSecurityService;
 import com.shsxt.xm.api.service.IBasUserService;
 import com.shsxt.xm.api.util.AssertUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +24,18 @@ public class BasUserController {
 
     @Autowired
     private IBasUserService basUserService;
+    @Autowired
+    private IBasUserSecurityService basUserSecurityService;
 
     @RequestMapping("queryBasUserById")
     @ResponseBody
-    public BasUser queryBasUserById(Integer id){
+    public BasUser queryBasUserById(Integer id) {
         return basUserService.queryBasUserById(id);
     }
 
     /**
      * 注册
+     *
      * @param phone
      * @param picCode
      * @param code
@@ -41,49 +45,49 @@ public class BasUserController {
      */
     @RequestMapping("register")
     @ResponseBody
-    public ResultInfo userRegister(String phone, String picCode, String code, String password, HttpSession session){
+    public ResultInfo userRegister(String phone, String picCode, String code, String password, HttpSession session) {
         ResultInfo resultInfo = new ResultInfo();
-        String sessionPicCode = (String)session.getAttribute(P2pConstant.PICTURE_VERIFY_CODE);
-        if (StringUtils.isBlank(sessionPicCode)){
+        String sessionPicCode = (String) session.getAttribute(P2pConstant.PICTURE_VERIFY_CODE);
+        if (StringUtils.isBlank(sessionPicCode)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("验证码已经失效");
             return resultInfo;
         }
-        if (!picCode.equals(sessionPicCode)){
+        if (!picCode.equals(sessionPicCode)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("验证码不匹配");
             return resultInfo;
         }
         //发送验证码时间
-        Date sessionTime = (Date)session.getAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME+phone);
-        if (null == sessionTime){
+        Date sessionTime = (Date) session.getAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME + phone);
+        if (null == sessionTime) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码已经失效");
             return resultInfo;
         }
         Date currTime = new Date();
-        long time = (currTime.getTime()-sessionTime.getTime())/1000;
-        if (time>180){
+        long time = (currTime.getTime() - sessionTime.getTime()) / 1000;
+        if (time > 180) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码已经失效");
             return resultInfo;
         }
-        String sessionCode = (String)session.getAttribute(P2pConstant.PHONE_VERIFY_CODE+phone);
-        if (!sessionCode.equals(code)){
+        String sessionCode = (String) session.getAttribute(P2pConstant.PHONE_VERIFY_CODE + phone);
+        if (!sessionCode.equals(code)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码不正确");
             return resultInfo;
         }
         try {
-            basUserService.saveBasUser(phone,password);
+            basUserService.saveBasUser(phone, password);
             session.removeAttribute(P2pConstant.PICTURE_VERIFY_CODE);
-            session.removeAttribute(P2pConstant.PHONE_VERIFY_CODE+phone);
-            session.removeAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME+phone);
-        }catch (ParamsException e){
+            session.removeAttribute(P2pConstant.PHONE_VERIFY_CODE + phone);
+            session.removeAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME + phone);
+        } catch (ParamsException e) {
             e.printStackTrace();
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(e.getErrorMsg());
-        }catch (Exception e){
+        } catch (Exception e) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(P2pConstant.OPS_FAILED_MSG);
         }
@@ -93,6 +97,7 @@ public class BasUserController {
 
     /**
      * 登录
+     *
      * @param phone
      * @param password
      * @param session
@@ -100,16 +105,16 @@ public class BasUserController {
      */
     @RequestMapping("userLogin")
     @ResponseBody
-    public ResultInfo userLogin(String phone,String password,HttpSession session){
+    public ResultInfo userLogin(String phone, String password, HttpSession session) {
         ResultInfo resultInfo = new ResultInfo();
         try {
-            BasUser basUser = basUserService.userLogin(phone,password);
-            session.setAttribute("userInfo",basUser);
+            BasUser basUser = basUserService.userLogin(phone, password);
+            session.setAttribute("userInfo", basUser);
         } catch (ParamsException e) {
             e.printStackTrace();
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(e.getErrorMsg());
-        }catch (Exception e){
+        } catch (Exception e) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(P2pConstant.OPS_FAILED_MSG);
         }
@@ -118,6 +123,7 @@ public class BasUserController {
 
     /**
      * 快速登录
+     *
      * @param phone
      * @param picCode
      * @param code
@@ -126,46 +132,46 @@ public class BasUserController {
      */
     @RequestMapping("quickLogin")
     @ResponseBody
-    public ResultInfo quickLogin(String phone,String picCode,String code,HttpSession session){
+    public ResultInfo quickLogin(String phone, String picCode, String code, HttpSession session) {
         ResultInfo resultInfo = new ResultInfo();
-        String sessionPicCode = (String)session.getAttribute(P2pConstant.PICTURE_VERIFY_CODE);
-        if (StringUtils.isBlank(sessionPicCode)){
+        String sessionPicCode = (String) session.getAttribute(P2pConstant.PICTURE_VERIFY_CODE);
+        if (StringUtils.isBlank(sessionPicCode)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("验证码已经失效");
             return resultInfo;
         }
-        if (!picCode.equals(sessionPicCode)){
+        if (!picCode.equals(sessionPicCode)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("验证码不匹配");
             return resultInfo;
         }
-        Date sessionTime = (Date)session.getAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME+phone);
-        if (sessionTime == null){
+        Date sessionTime = (Date) session.getAttribute(P2pConstant.PHONE_VERIFY_CODE_EXPIRE_TIME + phone);
+        if (sessionTime == null) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码失效");
             return resultInfo;
         }
         Date currenTime = new Date();
-        long time = (currenTime.getTime()-sessionTime.getTime())/1000;
-        if (time >180){
+        long time = (currenTime.getTime() - sessionTime.getTime()) / 1000;
+        if (time > 180) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码失效");
             return resultInfo;
         }
-        String sessionCode = (String)session.getAttribute(P2pConstant.PHONE_VERIFY_CODE+phone);
-        if (!code.equals(sessionCode)){
+        String sessionCode = (String) session.getAttribute(P2pConstant.PHONE_VERIFY_CODE + phone);
+        if (!code.equals(sessionCode)) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg("手机验证码不正确");
             return resultInfo;
         }
         try {
             BasUser basUser = basUserService.quickLogin(phone);
-            session.setAttribute("userInfo",basUser);
+            session.setAttribute("userInfo", basUser);
         } catch (ParamsException e) {
             e.printStackTrace();
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(e.getErrorMsg());
-        }catch (Exception e){
+        } catch (Exception e) {
             resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
             resultInfo.setMsg(P2pConstant.OPS_FAILED_MSG);
         }
@@ -174,13 +180,68 @@ public class BasUserController {
 
     /**
      * 退出
+     *
      * @param request
      * @return
      */
     @RequestMapping("exit")
-    public String exit(HttpServletRequest request){
+    public String exit(HttpServletRequest request) {
         request.getSession().removeAttribute("userInfo");
-        request.setAttribute("ctx",request.getContextPath());
+        request.setAttribute("ctx", request.getContextPath());
         return "login";
+    }
+
+    /**
+     * 认证验证
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("userAuthCheck")
+    @ResponseBody
+    public ResultInfo userAuthCheck(HttpServletRequest request) {
+        BasUser basUser = (BasUser) request.getSession().getAttribute("userInfo");
+        return basUserSecurityService.userAuthCheck(basUser.getId());
+    }
+
+    /**
+     * 转发到认证界面
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("auth")
+    public String authPage(HttpServletRequest request) {
+        request.getSession().setAttribute("ctx", request.getContextPath());
+        return "user/auth";
+    }
+
+    /**
+     * 执行认证
+     *
+     * @param realName
+     * @param idCard
+     * @param businessPassword
+     * @param confirmPassword
+     * @param session
+     * @return
+     */
+    @RequestMapping("userAuth")
+    @ResponseBody
+    public ResultInfo doUserAuth(String realName, String idCard, String businessPassword,
+                                 String confirmPassword, HttpSession session) {
+        BasUser basUser = (BasUser) session.getAttribute("userInfo");
+        ResultInfo resultInfo = new ResultInfo();
+        try {
+            basUserSecurityService.doUserAuth(realName, idCard, businessPassword, confirmPassword, basUser.getId());
+        } catch (ParamsException e) {
+            e.printStackTrace();
+            resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
+            resultInfo.setMsg(e.getErrorMsg());
+        } catch (Exception e) {
+            resultInfo.setCode(P2pConstant.OPS_FAILED_CODE);
+            resultInfo.setMsg(P2pConstant.OPS_FAILED_MSG);
+        }
+        return resultInfo;
     }
 }

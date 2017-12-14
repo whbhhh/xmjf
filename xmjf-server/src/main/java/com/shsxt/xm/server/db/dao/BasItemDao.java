@@ -4,5 +4,5 @@ import com.shsxt.xm.api.dto.BasItemDto;
 import com.shsxt.xm.server.base.BaseDao;
 
 public interface BasItemDao extends BaseDao<BasItemDto> {
-
+    public Integer updateBasItemStatusToOpen(Integer itemId);
 }

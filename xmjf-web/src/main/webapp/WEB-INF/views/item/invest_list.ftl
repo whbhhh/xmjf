@@ -14,35 +14,14 @@
     <script type="text/javascript" >
         var ctx="${ctx}";
     </script>
+    <script type="text/javascript" src="/js/assets/config.js"></script>
+    <script type="text/javascript" src="${ctx}/js/assets/require.js" data-main="${ctx}/js/index"></script>
     <script type="text/javascript" src="${ctx}/js/invest.list.js"></script>
 </head>
 
 <body>
 
-<div class="top_wrap">
-    <div class="top">
-        <p class="fl phone">欢迎致电：021-67690939</p>
-    </div>
-</div>
-<div class="header">
-    <div class="contain">
-        <a href="http://localhost:9999/index?0?0" class="logo">
-        </a>
-        <div class="header_nav" id="indexNav">
-            <a href="${ctx}/index">首页</a>
-            <a href="${ctx}/basItem/basItemListPage">我要投资</a>
-            <a href="${ctx}/security?0?2">安全保障</a>
-            <a href="${ctx}/account/accountInfo">我的账户</a>
-            <a href="${ctx}/introduce?0?4">关于我们</a>
-        </div>
-        <div class="header_button">
-            <div id="noUserId" style="width:142px;float: right">
-                <a href="http://localhost:9999/user/toLoginPage"><input class="btn register" id="loginPage" type="button" value="登录"></a>
-                <a href="http://localhost:9999/user/toRegisterPage"><input class="btn register" id="registerPage" type="button" value="注册"></a>
-            </div>
-        </div>
-    </div>
-</div>
+<#include "../include/header.ftl">
 
 <div class="list_container">
     <div class="date_tab" id="dateTab">

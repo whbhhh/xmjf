@@ -10,7 +10,7 @@ public class P2pConstant {
     public static final String PICTURE_VERIFY_CODE = "XM_00001";
     //手机验证码 session key
     public static final String PHONE_VERIFY_CODE = "XM_00002";
-    //手机验证码失效时间 session key
+    //手机验证码发送时间 session key
     public static final String PHONE_VERIFY_CODE_EXPIRE_TIME = "XM_00003";
 
 }
