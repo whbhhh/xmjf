@@ -7,10 +7,9 @@ xmjf(小蚂金服)
 ### 项目使用技术:<br />  
                          项目采用分布式技术 Dubbo+Zookeeper 搭建，将业务拆分为服务形式，方便后续对项目进行分布式部署，数据库采用MySql,后台框架使用当前比较成熟的SSM（Spring+SpringMvc+Mybatis）来实现具体业务,前端视图技术web网站采用Freemarker模板，可以实现页面信息的静态化理.Js交互采用           Jquery+Ajax以及相关js插件实现，网站后台使用BootStrap+Angula基于angular双向绑定技术快速开发后台模块相关功能. 开发工具是idea(也可使用 eclipce).
 
-### 项目环境搭建:项目搭建基于maven多模块,项目模块名称和关系如下:
+### 项目环境搭建:项目搭建基于maven多模块,项目模块名称和关系如下:<br />
                          xmjf-par:父模块<br />  
                          xmjf-api:服务接口定义子模块<br />
-                         xmjf-getnerator模板代码生成子模块(这个可以用另外的模板生成器代替,我使用的是mybatis-generator,所以该模块里没有引入插件     <br / >
                          xmjf-service:接口服务实现子模块<br />  
                          xmjf-admin:后台管理子模块<br />  
                          xmjf-web:网站子模块
@@ -29,7 +28,10 @@ xmjf(小蚂金服)
      此处需要注意的是:后台需要实现2个接口:<br/>
  1.获取手机验证码接口:localhost:9091/sys/sendPhoneSys;<br/>
       这里收集验证码处理:使用阿里大于短信 api 实现手机验证码发送功能.<br />
- 2.注册接口:localhost:9091/user/register;<br />    
+ 2.注册接口:localhost:9091/user/register;<br />  
+   注意:此处图像验证码显示功能使用google Kaptcha验证码产品实现前台验证码显示功能.
+        此处注册成功后,不仅要在user表中插入数据,也要同时更新与user表相关联的9张表(不一一列举).
+        因为注册与登录功能的快速登录均要使用手机短信发送功能,所有需要自己增加一个type属性以示区别.(1代表登录,2代表注册)
      
    
 
