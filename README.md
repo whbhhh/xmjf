@@ -12,3 +12,4 @@
              xmjf-service:接口服务实现子模块
              xmjf-admin:后台管理子模块
              xmjf-web:网站子模块
+注意点:配置server 模块项目启动命令启动 server 项目 这里以 9090 端口启动(注意多模块项目启动子模块先进行 install 操作!，启动 server 项目前先启动 	         zookeeper注册中心).
