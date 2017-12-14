@@ -12,7 +12,7 @@ xmjf(小蚂金服)
                          xmjf-api:服务接口定义子模块<br />  
                          xmjf-service:接口服务实现子模块<br />  
                          xmjf-admin:后台管理子模块<br />  
-                         xmjf-web:网站子模块<br />  
+                         xmjf-web:网站子模块
                         
 ### 注意点:<br />  
                          配置server 模块项目启动命令启动 server 项目 这里以 9090 端口启动(注意多模块项目启动子模块先进行 install 操作!,启动server项目前先启动zookeeper注册中心).
