@@ -12,7 +12,7 @@ xmjf(小蚂金服)
        xmjf-api:服务接口定义子模块<br />
        xmjf-service:接口服务实现子模块<br />  
        xmjf-admin:后台管理子模块<br />  
-       xmjf-web:网站子模块<br/>
+       xmjf-web:网站子模块<br />
        xmjf-par:父模块 
                         
 ### 启动项目时注意点:<br />  
@@ -44,7 +44,7 @@ xmjf(小蚂金服)
   前台数据:手机号,密码
   
 ### 项目列表展示功能
-  #### 注意:这里采用局部刷新来实现,局部刷新采用ajax请求后台数据,后续进行数据解析并通过jquery操作dom动态修改节点来实现页面局部刷新展示功能.
+  注意:这里采用局部刷新来实现,局部刷新采用ajax请求后台数据,后续进行数据解析并通过jquery操作dom动态修改节点来实现页面局部刷新展示功能.<br/>
   #### 接口:localhost:9091/basItem/basItemListPage<br/>
   这里所有用到的分页插件都是mybatis自带的PgeHelper插件.
  
