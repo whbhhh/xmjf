@@ -9,11 +9,11 @@ xmjf(小蚂金服)
 
 ### 项目环境搭建:项目搭建基于maven多模块,项目模块名称和关系如下:
 
-                         xmjf-api:服务接口定义子模块<br />
-                         xmjf-service:接口服务实现子模块<br />  
-                         xmjf-admin:后台管理子模块<br />  
-                         xmjf-web:网站子模块<br/>
-                         xmjf-par:父模块 
+       xmjf-api:服务接口定义子模块<br />
+       xmjf-service:接口服务实现子模块<br />  
+       xmjf-admin:后台管理子模块<br />  
+       xmjf-web:网站子模块<br/>
+       xmjf-par:父模块 
                         
 ### 启动项目时注意点:<br />  
                          配置server 模块项目启动命令启动 server 项目 这里以 9090 端口启动(注意多模块项目启动子模块先进行 install 操作!,启动server项目前先启动zookeeper注册中心).
@@ -44,10 +44,8 @@ xmjf(小蚂金服)
   前台数据:手机号,密码
   
 ### 项目列表展示功能
-
   #### 注意:这里采用局部刷新来实现,局部刷新采用ajax请求后台数据,后续进行数据解析并通过jquery操作dom动态修改节点来实现页面局部刷新展示功能.
-  
-  #### 接口:localhost:9091/basItem/basItemListPage
+  #### 接口:localhost:9091/basItem/basItemListPage<br/>
   这里所有用到的分页插件都是mybatis自带的PgeHelper插件.
  
 ### 项目基本信息列表展示
